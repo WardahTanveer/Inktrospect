@@ -9,7 +9,7 @@ Inktrospect is a journalling website created with the goal of learning web devel
 
 ## Attached Presentation
 
-For more information, view the our [Canva presentation](https://www.canva.com/design/DAGyM64WdMM/frE-c1X9drme5AX8REhEsg/edit?utm_content=DAGyM64WdMM&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+For more information, view our [Canva presentation](https://www.canva.com/design/DAGyM64WdMM/frE-c1X9drme5AX8REhEsg/edit?utm_content=DAGyM64WdMM&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
 ## Our Team's Contact (LinkedIn)
 
