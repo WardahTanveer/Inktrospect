@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+body {
+    height: 100vh;
+    background: url(../assets/bgnotes.png) no-repeat center center/cover;
+    background-attachment: fixed;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.container {
+    width: 100%;
+    min-height: 100vh;
+    padding-top: 90px; /* Adjusted for fixed navbar */
+    padding-left: 10%;
+    color: #2c1906;
+}
+.container h1{
+    display: flex;
+    align-items: center;
+    font-size: 35px;
+    font-weight: 600;
+}
+.container h1 img{
+    width: 65px;
+}
+.container button img{
+    width: 25px;
+    margin-right: 8px;
+}
+.container button{
+    display: flex;
+    align-items: center;
+    background: linear-gradient(#421f06,#79500c);
+    /* background: #432609; */
+    color: #fff;
+    font-size: 16px;
+    outline: 0;
+    border: 0;
+    border-radius: 40px;
+    padding: 15px 25px;
+    margin: 30px 0 20px;
+    cursor: pointer;
+}
+.notes-container {
+    max-height: 55vh;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+.note-box{
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    color: #e1d1b4;
+    background: #4e2d0b;
+    padding: 10px;
+    margin: 20px 0 ;
+    border-radius: 5px;
+    font-size: 15px;
+}
+.note-box img{
+    width: 25px;
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    margin: 10px;
+    cursor: pointer;
+}
+.note-title{
+    padding: 10px;
+    margin: 10px 0 ;
+    background-color:#45280d;
+    border-radius: 5px;
+    cursor: text;
+}
+.note-content{
+    position: relative;
+    width: 100%;
+    min-height: 100px;
+    color: #e1d1b4;
+    background: #45280d;
+    padding: 10px;
+    margin: 10px 0 ;
+    margin-bottom: 50px;
+    border-radius: 5px;
+    cursor: text;
+}
+.note-date{
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    margin: 10px;
+}

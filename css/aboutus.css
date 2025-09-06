@@ -1,0 +1,131 @@
+/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+    overflow-x: hidden;
+    background-color: #f5f5f5;
+}
+body {
+    min-height: 100vh;
+    background:url(Inktrospect.png) no-repeat center center/cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    object-fit: cover;
+}
+
+/* Sticky Navbar */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;
+    padding: 20px 5%;
+    background: #624a35;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+    font-size: 2em;
+    color: #fff;
+}
+
+.navigation {
+    display: flex;
+    align-items: center;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+}
+
+.nav-links li {
+    margin-left: 20px;
+}
+
+.nav-links a {
+    font-size: 1.1em;
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: #291a0d;
+    font-weight: 700;
+}
+
+.menu-toggle {
+    display: none;
+    font-size: 2em;
+    color: white;
+    cursor: pointer;
+}
+
+/* Fix white gap between pages */
+.container {
+    width: 100%;
+    min-height: 100vh;
+    /* display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; */
+    background-color: #624a35;
+  
+}
+
+.slides img {
+    width: 100%;
+    display: block;
+
+    background-size: cover;
+    background-position: center;
+}
+
+
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        background: #624a35;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        padding: 10px 0;
+    }
+    
+    .nav-links.active {
+        display: flex;
+    }
+
+    .nav-links li {
+        margin: 15px 0;
+    }
+    
+    .menu-toggle {
+        display: block;
+    }
+}

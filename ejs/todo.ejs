@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>To-Do List App</title>
+    <link rel="stylesheet" href="../css/todo.css">
+    <script src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js" type="module"></script>
+    <script src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js" nomodule></script>
+</head>
+
+<body>
+    <%-include("navbar")%>
+    <div class="container">
+        <div class="todo-app">
+            <h2>To-Do List <img src="../assets/todoicon.png"> </h2>
+            <div class="row">
+                <input type="text" id="input-box" placeholder="Add your text">
+                <button id="add-button">Add</button>
+            </div>
+            <ul id="list-container"></ul>
+        </div>
+    </div>
+        <script src="../js/todo.js"></script>
+    </body>
+</html>

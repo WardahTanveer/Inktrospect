@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood Tracker</title>
+    <script src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js" type="module"></script>
+    <script src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js" nomodule></script>
+    <link rel="stylesheet" href="../css/mood.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Relief:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <%-include("navbar")%>
+    <img class="bg" src="../assets/bgmood.png">
+    <div class="emotions">
+        <img class="box" src="../assets/moodbox.png">
+    </div>
+    <ul class="emoji-list">
+        <li data-mood="Happy">😂</li>
+        <li data-mood="Content">😊</li>
+        <li data-mood="Sleepy">😴</li>
+        <li data-mood="Sad">😭</li>
+        <li data-mood="Angry">😡</li>
+    </ul>
+    <button class="mood-stats">View Stats</button>
+    <div class="modal">
+        <div class="modal-content">
+            <div class="modal-transition">
+                <button class="back-btn" style="display:none;">Back</button>
+                <span class="close-btn">&times;</span>
+                <div class="chart-navigation">
+                    <button class="year-prev">&#8592;</button>
+                    <span class="year-label">2024</span>
+                    <button class="year-next">&#8594;</button>
+                </div>
+                <div class="chart-scroll">
+                    <canvas class="moodChart"></canvas>
+                </div>
+                </div>
+        </div>        
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/mood.js"></script>
+</body>
+</html>
