@@ -1,3 +1,6 @@
+/* Copy and paste these queries on a MySQL Command Line Client or any database editor to have the entire database schema, ready to be used with the website code.
+Additionally, password in server.js (line 23) should be changed to your MySQL account password. */
+
 CREATE DATABASE IF NOT EXISTS Inktrospect;
 USE Inktrospect;
 
