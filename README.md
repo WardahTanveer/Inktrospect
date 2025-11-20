@@ -7,6 +7,13 @@ Inktrospect is a journalling website created with the goal of learning web devel
 - Note making
 - Mood tracking
 
+## Video of working website
+
+
+https://github.com/user-attachments/assets/9ec949e9-c36f-4c9e-9a23-46d35a0c13b0
+
+
+
 ## Attached Presentation
 
 For more information, view our [Canva presentation](https://www.canva.com/design/DAGyM64WdMM/frE-c1X9drme5AX8REhEsg/edit?utm_content=DAGyM64WdMM&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
