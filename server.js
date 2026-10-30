@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 //Importing modules and setting up basic stuff
 const express=require("express");
 const app=express();
@@ -10,18 +12,40 @@ app.set("views", path.join(__dirname, "ejs"));
 
 const bcrypt=require('bcryptjs');
 const session=require('express-session');
+app.set('trust proxy', 1);
 app.use(session({
-    secret: 'secret-key',
+    secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax'
+    }
 }));
 
 const mysql=require('mysql2');
-const db = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "12345",
-    database: "Inktrospect",
+const db=mysql.createPool({
+    host: process.env.DB_HOST,
+    port: Number(process.env.DB_PORT || 3306),
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    ssl: process.env.DB_SSL === 'true'
+        ? { ca: process.env.DB_SSL_CA }
+        : undefined,
+    waitForConnections: true,
+    connectionLimit: 5,
+    queueLimit: 0
+});
+
+db.getConnection((err, connection) => {
+    if (err) {
+        console.error('Database connection failed:', err);
+    } else {
+        console.log('Connected to MySQL successfully!');
+        connection.release();
+    }
 });
 
 app.use((req,res,next)=>{
@@ -252,6 +276,7 @@ app.all("*", (req,res)=>{
 });
 
 //Start server
-app.listen(5000, ()=>{
-    console.log("Server is listening on port 5000...");
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+    console.log(`Server is listening on port ${PORT}...`);
 });
