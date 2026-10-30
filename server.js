@@ -1,20 +1,41 @@
 require('dotenv').config();
 
 //Importing modules and setting up basic stuff
-const express=require("express");
-const app=express();
-app.use(express.json());
-app.use(express.static(__dirname));
+const express = require("express");
+const path = require("path");
+const app = express();
 
-const path=require("path");
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "ejs"));
 
 const bcrypt=require('bcryptjs');
 const session=require('express-session');
+const MySQLStore = require('express-mysql-session')(session);
 app.set('trust proxy', 1);
+const sessionStore = new MySQLStore({
+    host: process.env.DB_HOST,
+    port: Number(process.env.DB_PORT || 3306),
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+
+    ssl: process.env.DB_SSL === 'true'
+        ? { ca: process.env.DB_SSL_CA }
+        : undefined,
+
+    waitForConnections: true,
+    connectionLimit: 2,
+    queueLimit: 0
+});
+sessionStore.onReady()
+    .then(() => console.log('MySQL session store ready.'))
+    .catch(err => console.error('Session store error:', err));
 app.use(session({
     secret: process.env.SESSION_SECRET,
+    store: sessionStore,
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -57,7 +78,7 @@ app.use((req,res,next)=>{
 //Register, login and logout
 app.post("/register", async (req,res)=>{
     const {username, email, password}=req.body;
-    db.query("select * from Users_Table where UserID=?", [username], async (err,result)=>{
+    db.query("select * from users_table where UserID=?", [username], async (err,result)=>{
         if(err){
             return res.status(500).json({ success: false, message: "Database error"});
         }
@@ -65,7 +86,7 @@ app.post("/register", async (req,res)=>{
             return res.status(400).json({ success: false, message: "Username already exists."});
         }
         const hashedPassword=await bcrypt.hash(password, 10);
-        db.query("insert into Users_Table (UserID, Email, Password) values (?, ?, ?)", [username, email, hashedPassword], (err)=>{
+        db.query("insert into users_table (UserID, Email, Password) values (?, ?, ?)", [username, email, hashedPassword], (err)=>{
             if(err){
                 return res.status(500).json({ success: false, message: "Database error"});
             }
@@ -75,7 +96,7 @@ app.post("/register", async (req,res)=>{
 });
 app.post("/login", (req, res) => {
     const {username, password} = req.body;
-    db.query("select * from Users_Table where UserID=?", [username], (err, result) => {
+    db.query("select * from users_table where UserID=?", [username], (err, result) => {
         if (err) {
             return res.status(500).json({ success: false, message: "Database error"});
         }
@@ -136,7 +157,7 @@ app.use("/api", (req,res,next)=>{
 });
 app.get("/api/toDoList", (req, res) => {
     const userID = req.session.user.UserID;
-    db.query('select * from Tasks_Table where UserID = ?', [userID], (err, tasks) => {
+    db.query('select * from tasks_table where UserID = ?', [userID], (err, tasks) => {
         if (err) {
             return res.status(500).send('Error fetching tasks');
         }
@@ -146,7 +167,7 @@ app.get("/api/toDoList", (req, res) => {
 app.post("/api/toDoList", (req, res) => {
     const userID = req.session.user.UserID;
     const { task, status } = req.body;
-    db.query('insert into Tasks_Table (UserID, Task, Status) values (?, ?, ?)', [userID, task, status], (err) => {
+    db.query('insert into tasks_table (UserID, Task, Status) values (?, ?, ?)', [userID, task, status], (err) => {
         if (err) {
             return res.status(500).send('Error adding task');
         }
@@ -158,7 +179,7 @@ app.put("/api/toDoList/:taskID", (req, res) => {
     const { taskID } = req.params;
     const { status } = req.body;
     if (status !== undefined) {
-        db.query('update Tasks_Table set Status = ? where TaskID = ? and UserID = ?', [status, taskID, userID], (err) => {
+        db.query('update tasks_table set Status = ? where TaskID = ? and UserID = ?', [status, taskID, userID], (err) => {
             if (err){
                 return res.status(500).send('Error updating status');
             }
@@ -172,7 +193,7 @@ app.put("/api/toDoList/:taskID", (req, res) => {
 app.delete('/api/toDoList/:taskID', (req, res) => {
     const userID = req.session.user.UserID;
     const { taskID } = req.params;
-    db.query('delete from Tasks_Table where TaskID = ? and UserID = ?', [taskID, userID], (err) => {
+    db.query('delete from tasks_table where TaskID = ? and UserID = ?', [taskID, userID], (err) => {
         if (err) {
             return res.status(500).send('Error deleting task');
         }
@@ -183,7 +204,7 @@ app.delete('/api/toDoList/:taskID', (req, res) => {
 //Notes
 app.get("/api/notes", (req,res)=>{
     const userID = req.session.user.UserID;
-    db.query('select * from Notes_Table where UserID = ?', [userID], (err, notes) => {
+    db.query('select * from notes_table where UserID = ?', [userID], (err, notes) => {
         if (err) {
             return res.status(500).send('Error fetching tasks');
         }
@@ -193,7 +214,7 @@ app.get("/api/notes", (req,res)=>{
 app.post("/api/notes", (req, res) => {
     const userID = req.session.user.UserID;
     const { title, content } = req.body;
-    db.query('insert into Notes_Table (UserID, Title, Content) values (?, ?, ?)', [userID, title, content], (err) => {
+    db.query('insert into notes_table (UserID, Title, Content) values (?, ?, ?)', [userID, title, content], (err) => {
         if (err) {
             return res.status(500).send('Error adding note');
         }
@@ -204,7 +225,7 @@ app.put("/api/notes/:noteID", (req, res) => {
     const userID = req.session.user.UserID;
     const { noteID } = req.params;
     const { title, content } = req.body;
-    db.query('update Notes_Table set Title = ?, Content = ? where NoteID = ? and UserID = ?', [title, content, noteID, userID], (err) => {
+    db.query('update notes_table set Title = ?, Content = ? where NoteID = ? and UserID = ?', [title, content, noteID, userID], (err) => {
         if (err){
             return res.status(500).send('Error updating note');
         }
@@ -214,7 +235,7 @@ app.put("/api/notes/:noteID", (req, res) => {
 app.delete('/api/notes/:noteID', (req, res) => {
     const userID = req.session.user.UserID;
     const { noteID } = req.params;
-    db.query('delete from Notes_Table where NoteID = ? and UserID = ?', [noteID, userID], (err) => {
+    db.query('delete from notes_table where NoteID = ? and UserID = ?', [noteID, userID], (err) => {
         if (err) {
             return res.status(500).send('Error deleting note');
         }
@@ -225,7 +246,7 @@ app.delete('/api/notes/:noteID', (req, res) => {
 //Mood Tracker
 app.get("/api/mood", (req, res) => {
     const userID = req.session.user.UserID;
-    db.query("select * from Mood_Table where UserID = ?", [userID], (err, moods) => {
+    db.query("select * from mood_table where UserID = ?", [userID], (err, moods) => {
         if (err){
             return res.status(500).send("Error fetching mood entries");
         }
@@ -236,14 +257,14 @@ app.post("/api/mood", (req, res) => {
     const userID = req.session.user.UserID;
     const { mood } = req.body;
     const date = new Date().toISOString().split('T')[0];
-    db.query("select * from Mood_Table where UserID = ? and Date = ?", [userID, date], (err, result) => {
+    db.query("select * from mood_table where UserID = ? and Date = ?", [userID, date], (err, result) => {
         if (err) {
             return res.status(500).send("Error checking mood entry");
         }
         if (result.length > 0) {
             return res.status(400).json({ success: false, message: "You have already logged your mood for today" });
         }
-        db.query("insert into Mood_Table (UserID, Mood, Date) values (?, ?, ?)", 
+        db.query("insert into mood_table (UserID, Mood, Date) values (?, ?, ?)", 
             [userID, mood, date], 
             (err) => {
                 if (err){
@@ -259,7 +280,7 @@ app.post("/api/mood", (req, res) => {
 app.post("/submitContactForm", (req, res) => {
     const { fullName, email, message } = req.body;
     db.query(
-        "insert into Contact_Messages_Table (FullName, Email, Message) values (?, ?, ?)",
+        "insert into contact_messages_table (FullName, Email, Message) values (?, ?, ?)",
         [fullName, email, message],
         (err) => {
             if (err) {
